@@ -1,0 +1,8 @@
+{
+  "name": "cuberpunk-vr",
+  "dependencies": {},
+  "globalDependencies": {
+    "three": "registry:dt/three#0.0.0+20160602140506",
+    "webpack-env": "registry:dt/webpack-env#1.12.2+20160316155526"
+  }
+}

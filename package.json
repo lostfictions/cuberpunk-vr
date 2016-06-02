@@ -1,0 +1,40 @@
+{
+  "name": "cuberpunk-vr",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.production.js --progress --profile --colors"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lostfictions/cuberpunk-vr.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lostfictions/cuberpunk-vr/issues"
+  },
+  "homepage": "https://github.com/lostfictions/cuberpunk-vr#readme",
+  "dependencies": {
+    "bootswatch": "^3.3.6",
+    "codemirror": "^5.15.2",
+    "three": "^0.77.1"
+  },
+  "devDependencies": {
+    "awesome-typescript-loader": "^0.17.0",
+    "concurrently": "^2.1.0",
+    "cross-env": "^1.0.8",
+    "css-loader": "^0.23.1",
+    "express": "^4.13.4",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "json-loader": "^0.5.4",
+    "source-map-loader": "^0.1.5",
+    "style-loader": "^0.13.1",
+    "typescript": "^1.8.10",
+    "webpack": "^1.13.1",
+    "webpack-dev-middleware": "^1.6.1",
+    "webpack-hot-middleware": "^2.10.0"
+  }
+}
