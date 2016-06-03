@@ -40,15 +40,15 @@ export class CSS3DVREffect {
 
     // Handle fullscreen
     if(this.domElement.requestFullscreen) {
-      document.addEventListener('fullscreenchange', this.onFullscreenChange, false)
+      document.addEventListener('fullscreenchange', () => this.onFullscreenChange(), false)
     }
     else if(this.domElement.webkitRequestFullscreen) {
-      document.addEventListener('webkitfullscreenchange', this.onFullscreenChange, false)
+      document.addEventListener('webkitfullscreenchange', () => this.onFullscreenChange(), false)
     }
     else {
       throw new Error(`Cannot request fullscreen on renderer DOM element '${this.domElement}'!`)
     }
-    window.addEventListener('vrdisplaypresentchange', this.onFullscreenChange, false)
+    window.addEventListener('vrdisplaypresentchange', () => this.onFullscreenChange(), false)
 
     this.cameraL = new THREE.PerspectiveCamera()
     this.cameraL.layers.enable(1)
@@ -65,7 +65,6 @@ export class CSS3DVREffect {
     else {
       this.renderer.setSize(width, height)
     }
-
   };
 
   private onFullscreenChange() : void {
@@ -105,11 +104,29 @@ export class CSS3DVREffect {
       }
 
       if(fullscreen) {
-        const canvas : any = this.domElement // HACK
-        resolve(this.vrDisplay.requestPresent([ { source: canvas } ] ))
+        if(this.domElement.requestFullscreen) {
+          this.domElement.requestFullscreen()
+        }
+        else if(this.domElement.webkitRequestFullscreen) {
+          this.domElement.webkitRequestFullscreen()
+        }
+        else {
+          throw new Error("Can't request fullscreen!")
+        }
+        resolve()
       }
       else {
-        resolve(this.vrDisplay.exitPresent())
+        if(document.exitFullscreen) {
+          document.exitFullscreen()
+        }
+        else if(document.webkitExitFullscreen) {
+          document.webkitExitFullscreen()
+        }
+        else {
+          throw new Error("Can't request fullscreen!")
+        }
+        resolve()
+        // resolve(this.vrDisplay.exitPresent())
       }
     })
   }

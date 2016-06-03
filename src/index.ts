@@ -105,7 +105,8 @@ function init() : void {
   const element = document.createElement('div')
   element.innerHTML = 'Plain text inside a div.'
   element.className = 'three-div'
-  
+  element.style.backgroundColor = 'magenta'
+
   const div = new CSSObject3D(element)
   div.position.x = 0
   div.position.y = 0
