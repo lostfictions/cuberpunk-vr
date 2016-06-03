@@ -4,7 +4,8 @@
     "target": "es5",
     "module": "commonjs",
     "sourceMap": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "allowJs": true
   },
   "files": [
     "typings/index.d.ts",

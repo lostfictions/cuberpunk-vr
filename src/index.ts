@@ -6,6 +6,9 @@ import { VRControls } from './VRControls'
 
 require('webvr-polyfill')
 
+var VREffect : any = require('./VREffect.js')
+
+
 if(!WebVR.isLatestAvailable()) {
   document.body.appendChild(WebVR.getMessage())
 }
@@ -14,18 +17,17 @@ let camera : THREE.PerspectiveCamera
 let raycaster : THREE.Raycaster
 let room : THREE.Mesh
 
-let effect : CSS3DVREffect
 let controls : VRControls
-
 let isMouseDown = false
-
 let INTERSECTED : THREE.Object3D & { material? : any; currentHex? : number }
 
+let effect : any
 let renderer : THREE.WebGLRenderer
 let scene : THREE.Scene
 
-let renderer2 : CSS3DRenderer
-let scene2 : THREE.Scene
+// let effect2 : CSS3DVREffect
+// let renderer2 : CSS3DRenderer
+// let scene2 : THREE.Scene
 
 init()
 animate()
@@ -33,7 +35,7 @@ animate()
 function init() : void {
   scene = new THREE.Scene()
   camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 )
-  scene.add( camera )
+  scene.add(camera)
   const crosshair = new THREE.Mesh(
     new THREE.RingGeometry( 0.02, 0.04, 32 ),
     new THREE.MeshBasicMaterial( {
@@ -43,16 +45,19 @@ function init() : void {
     } )
   )
   crosshair.position.z = - 2
-  camera.add( crosshair )
+  camera.add(crosshair)
   room = new THREE.Mesh(
-    new THREE.BoxGeometry( 6, 6, 6, 10, 10, 10 ),
-    new THREE.MeshBasicMaterial( { color: 0x202020, wireframe: true } )
+    new THREE.BoxGeometry(6, 6, 6, 10, 10, 10),
+    new THREE.MeshBasicMaterial({ color: 0x202020, wireframe: true })
   )
-  scene.add( room )
-  scene.add( new THREE.HemisphereLight( 0x404020, 0x202040, 0.5 ) )
-  const light = new THREE.DirectionalLight( 0xffffff )
-  light.position.set( 1, 1, 1 ).normalize()
-  scene.add( light )
+
+  scene.add(room)
+  scene.add(new THREE.HemisphereLight(0x404020, 0x202040, 0.5))
+
+  const light = new THREE.DirectionalLight(0xffffff)
+  light.position.set(1, 1, 1).normalize()
+  scene.add(light)
+
   const geometry = new THREE.BoxGeometry( 0.15, 0.15, 0.15 )
   for(let i = 0; i < 200; i++) {
     const object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) )
@@ -72,35 +77,40 @@ function init() : void {
     room.add( object )
   }
   raycaster = new THREE.Raycaster()
+
   renderer = new THREE.WebGLRenderer( { antialias: true } )
-  renderer2 = new CSS3DRenderer()
+  // renderer2 = new CSS3DRenderer()
+
   renderer.setClearColor( 0x101010 )
   renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( window.innerWidth, window.innerHeight )
   renderer.sortObjects = false
+
   const container = document.createElement('div')
   document.body.appendChild(container)
-  container.appendChild( renderer.domElement )
-  controls = new VRControls(camera, e => console.error(e))
-  // effect = new THREE.VREffect( renderer )
-  effect = new CSS3DVREffect(renderer2, (err : string) => console.error('CSS3DVREffect: ' + err))
+  container.appendChild(renderer.domElement)
 
+  controls = new VRControls(camera, e => console.error(e))
+  effect = new VREffect(renderer, (err : string) => console.error('VREffect: ' + err) )
+  // effect2 = new CSS3DVREffect(renderer2, (err : string) => console.error('CSS3DVREffect: ' + err))
+
+    
   // CSS3D Scene
-  scene2 = new THREE.Scene()
+  // scene2 = new THREE.Scene()
 
   // HTML
-  const element = document.createElement('div')
-  element.innerHTML = 'Plain text inside a div.'
-  element.className = 'three-div'
+  // const element = document.createElement('div')
+  // element.innerHTML = 'Plain text inside a div.'
+  // element.className = 'three-div'
 
-  // CSS Object
-  const div = new CSSObject3D(element)
-  div.position.x = 0
-  div.position.y = 0
-  div.position.z = -185
-  div.rotation.y = 0
-  // div.rotation.y = Math.PI
-  scene2.add(div)
+  // // CSS Object
+  // const div = new CSSObject3D(element)
+  // div.position.x = 0
+  // div.position.y = 0
+  // div.position.z = -185
+  // div.rotation.y = 0
+  // // div.rotation.y = Math.PI
+  // scene2.add(div)
 
   // CSS3D Renderer
   // renderer2.setSize(window.innerWidth, window.innerHeight)
@@ -110,15 +120,15 @@ function init() : void {
 
 
 
-  if ( WebVR.isAvailable() === true ) {
-    document.body.appendChild( WebVR.getButton( effect ) )
+  if(WebVR.isAvailable()) {
+    document.body.appendChild(WebVR.getButton(effect))
   }
-  renderer.domElement.addEventListener( 'mousedown', onMouseDown, false )
-  renderer.domElement.addEventListener( 'mouseup', onMouseUp, false )
-  renderer.domElement.addEventListener( 'touchstart', onMouseDown, false )
-  renderer.domElement.addEventListener( 'touchend', onMouseUp, false )
+  renderer.domElement.addEventListener('mousedown', onMouseDown, false)
+  renderer.domElement.addEventListener('mouseup', onMouseUp, false)
+  renderer.domElement.addEventListener('touchstart', onMouseDown, false)
+  renderer.domElement.addEventListener('touchend', onMouseUp, false)
 
-  window.addEventListener( 'resize', onWindowResize, false )
+  window.addEventListener('resize', onWindowResize, false)
 }
 function onMouseDown() : void {
   isMouseDown = true
@@ -129,16 +139,16 @@ function onMouseUp() : void {
 function onWindowResize() : void {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
-  effect.setSize( window.innerWidth, window.innerHeight )
+  effect.setSize(window.innerWidth, window.innerHeight)
 }
 
 function animate() : void {
-  requestAnimationFrame( animate )
+  requestAnimationFrame(animate)
   render()
 }
 
 function render() : void {
-  if ( isMouseDown === true ) {
+  if(isMouseDown) {
     const cube = room.children[ 0 ]
     room.remove(cube)
     cube.position.set( 0, 0, - 0.75 )
@@ -149,6 +159,7 @@ function render() : void {
     cube.userData.velocity.applyQuaternion( camera.quaternion )
     room.add(cube)
   }
+  
   // find intersections
   raycaster.setFromCamera( { x: 0, y: 0 }, camera )
   const intersects = raycaster.intersectObjects( room.children )
@@ -168,6 +179,7 @@ function render() : void {
     }
     INTERSECTED = undefined
   }
+  
   // Keep cubes inside room
   for (let i = 0; i < room.children.length; i++) {
     const cube = room.children[ i ]
@@ -190,8 +202,9 @@ function render() : void {
     cube.rotation.z += cube.userData.velocity.z * 2
   }
   controls.update()
-  // effect.render( scene2, camera )
-  // effect.render( scene, camera )
+  effect.render(scene, camera)
+  // renderer.render(scene, camera)
+  
+  // effect2.render( scene2, camera )
   // renderer2.render(scene2, camera);
-  // renderer.render(scene, camera);
 }
