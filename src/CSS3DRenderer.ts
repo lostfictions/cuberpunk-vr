@@ -48,9 +48,12 @@ export class CSSSprite3D extends CSSObject3D {
 export class CSS3DRenderer {
   domElement : HTMLDivElement
 
-  private matrix : THREE.Matrix4
-  private cache : any
   private cameraElement : HTMLDivElement
+  private matrix : THREE.Matrix4
+  private cache = {
+    objects: {} as any,
+    camera: {} as any
+  }
 
   private width : number
   private height : number
@@ -58,7 +61,7 @@ export class CSS3DRenderer {
   private heightHalf : number
 
   constructor() {
-    console.log('THREE.CSS3DRenderer', THREE.REVISION)
+    console.log('ThreeJS CSS3DRenderer')
 
     this.matrix = new THREE.Matrix4()
 

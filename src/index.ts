@@ -6,7 +6,7 @@ import { VRControls } from './VRControls'
 
 require('webvr-polyfill')
 
-var VREffect : any = require('./VREffect.js')
+// const VREffect : any = require('./VREffect.js')
 
 
 if(!WebVR.isLatestAvailable()) {
@@ -21,13 +21,14 @@ let controls : VRControls
 let isMouseDown = false
 let INTERSECTED : THREE.Object3D & { material? : any; currentHex? : number }
 
-let effect : any
-let renderer : THREE.WebGLRenderer
 let scene : THREE.Scene
 
-// let effect2 : CSS3DVREffect
-// let renderer2 : CSS3DRenderer
-// let scene2 : THREE.Scene
+// let effect : any
+// let renderer : THREE.WebGLRenderer
+
+let effect2 : CSS3DVREffect
+let renderer2 : CSS3DRenderer
+
 
 init()
 animate()
@@ -78,55 +79,54 @@ function init() : void {
   }
   raycaster = new THREE.Raycaster()
 
-  renderer = new THREE.WebGLRenderer( { antialias: true } )
-  // renderer2 = new CSS3DRenderer()
 
-  renderer.setClearColor( 0x101010 )
-  renderer.setPixelRatio( window.devicePixelRatio )
-  renderer.setSize( window.innerWidth, window.innerHeight )
-  renderer.sortObjects = false
+  // renderer = new THREE.WebGLRenderer({ antialias: true })
+  // renderer.setClearColor(0x101010)
+  // renderer.setPixelRatio(window.devicePixelRatio)
+  // renderer.setSize(window.innerWidth, window.innerHeight)
+  // renderer.sortObjects = false
+
+  renderer2 = new CSS3DRenderer()
+  renderer2.setSize(window.innerWidth, window.innerHeight)
+  renderer2.domElement.style.position = 'absolute'
+  renderer2.domElement.style.top = '0'
 
   const container = document.createElement('div')
   document.body.appendChild(container)
-  container.appendChild(renderer.domElement)
+  // container.appendChild(renderer.domElement)
+  container.appendChild(renderer2.domElement)
 
   controls = new VRControls(camera, e => console.error(e))
-  effect = new VREffect(renderer, (err : string) => console.error('VREffect: ' + err) )
-  // effect2 = new CSS3DVREffect(renderer2, (err : string) => console.error('CSS3DVREffect: ' + err))
-
-    
-  // CSS3D Scene
-  // scene2 = new THREE.Scene()
-
-  // HTML
-  // const element = document.createElement('div')
-  // element.innerHTML = 'Plain text inside a div.'
-  // element.className = 'three-div'
-
-  // // CSS Object
-  // const div = new CSSObject3D(element)
-  // div.position.x = 0
-  // div.position.y = 0
-  // div.position.z = -185
-  // div.rotation.y = 0
-  // // div.rotation.y = Math.PI
-  // scene2.add(div)
-
-  // CSS3D Renderer
-  // renderer2.setSize(window.innerWidth, window.innerHeight)
-  // renderer2.domElement.style.position = 'absolute'
-  // renderer2.domElement.style.top = '0'
-  // document.body.appendChild(renderer2.domElement)
+  // effect = new VREffect(renderer, (err : string) => console.error('VREffect: ' + err) )
+  effect2 = new CSS3DVREffect(renderer2, (err : string) => console.error('CSS3DVREffect: ' + err))
 
 
+  // CSS Object
+  const element = document.createElement('div')
+  element.innerHTML = 'Plain text inside a div.'
+  element.className = 'three-div'
+  
+  const div = new CSSObject3D(element)
+  div.position.x = 0
+  div.position.y = 0
+  div.position.z = -185
+  div.rotation.y = 0
+  // div.rotation.y = Math.PI
+  scene.add(div)
 
   if(WebVR.isAvailable()) {
-    document.body.appendChild(WebVR.getButton(effect))
+    // document.body.appendChild(WebVR.getButton(effect))
+    document.body.appendChild(WebVR.getButton(effect2))
   }
-  renderer.domElement.addEventListener('mousedown', onMouseDown, false)
-  renderer.domElement.addEventListener('mouseup', onMouseUp, false)
-  renderer.domElement.addEventListener('touchstart', onMouseDown, false)
-  renderer.domElement.addEventListener('touchend', onMouseUp, false)
+  // renderer.domElement.addEventListener('mousedown', onMouseDown, false)
+  // renderer.domElement.addEventListener('mouseup', onMouseUp, false)
+  // renderer.domElement.addEventListener('touchstart', onMouseDown, false)
+  // renderer.domElement.addEventListener('touchend', onMouseUp, false)
+
+  renderer2.domElement.addEventListener('mousedown', onMouseDown, false)
+  renderer2.domElement.addEventListener('mouseup', onMouseUp, false)
+  renderer2.domElement.addEventListener('touchstart', onMouseDown, false)
+  renderer2.domElement.addEventListener('touchend', onMouseUp, false)
 
   window.addEventListener('resize', onWindowResize, false)
 }
@@ -139,7 +139,8 @@ function onMouseUp() : void {
 function onWindowResize() : void {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
-  effect.setSize(window.innerWidth, window.innerHeight)
+  // effect.setSize(window.innerWidth, window.innerHeight)
+  effect2.setSize(window.innerWidth, window.innerHeight)
 }
 
 function animate() : void {
@@ -202,9 +203,9 @@ function render() : void {
     cube.rotation.z += cube.userData.velocity.z * 2
   }
   controls.update()
-  effect.render(scene, camera)
+  // effect.render(scene, camera)
   // renderer.render(scene, camera)
-  
-  // effect2.render( scene2, camera )
+
+  effect2.render(scene, camera)
   // renderer2.render(scene2, camera);
 }
