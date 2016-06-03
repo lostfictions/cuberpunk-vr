@@ -1,15 +1,27 @@
 import * as THREE from 'three'
+import { CSS3DRenderer } from './CSS3DRenderer'
 
-export class VREffect {
-  vrHMD: any
-  isDeprecatedAPI: boolean
-  eyeTranslationL: THREE.Vector3
-  eyeTranslationR: THREE.Vector3
+export class CSS3DVREffect {
+  private vrHMD : VRDisplay | HMDVRDevice
+  private isDeprecatedAPI : boolean
+  private scale = 1
+  private eyeTranslationL : THREE.Vector3
+  private eyeTranslationR : THREE.Vector3
+
+  private renderer : CSS3DRenderer
+  private onError : ErrorEventHandler
+
+  private isPresenting = false
+
   // renderRectL
   // renderRectR
   // eyeFOVL
   // eyeFOVR
-  constructor(renderer : THREE.Renderer, onError : (err : ErrorEventHandler) => void) {
+
+  constructor(renderer : CSS3DRenderer, onError : ErrorEventHandler) {
+    this.renderer = renderer
+    this.onError = onError
+
     this.eyeTranslationL = new THREE.Vector3()
     this.eyeTranslationR = new THREE.Vector3()
 
@@ -22,74 +34,45 @@ export class VREffect {
     }
   }
 
-  gotVRDevices(devices : VRDisplay[] | HMDVRDevice[]) : void {
-
-    for(let i = 0; i < devices.length; i++ ) {
-
-      if ( 'VRDisplay' in window && devices[ i ] instanceof VRDisplay ) {
-
-        vrHMD = devices[ i ];
-        isDeprecatedAPI = false;
-        break; // We keep the first we encounter
-
-      } else if ( 'HMDVRDevice' in window && devices[ i ] instanceof HMDVRDevice ) {
-
-        vrHMD = devices[ i ];
-        isDeprecatedAPI = true;
-        break; // We keep the first we encounter
-
+  private gotVRDevices(devices : VRDisplay[] | HMDVRDevice[]) : void {
+    for(const d of devices) {
+      if('VRDisplay' in window && d instanceof VRDisplay) {
+        this.vrHMD = d
+        this.isDeprecatedAPI = false
+        break
       }
-
+      else if('HMDVRDevice' in window && d instanceof HMDVRDevice) {
+        this.vrHMD = d
+        this.isDeprecatedAPI = true
+        break
+      }
     }
 
-    if ( vrHMD === undefined ) {
-
-      if ( onError ) onError( 'HMD not available' );
-
+    if(this.vrHMD == undefined) {
+      if(this.onError) {
+        this.onError('HMD not available')
+      }
     }
-
   }
 
-  
+  setSize(width : number, height : number) : void {
 
-  //
+    if(this.isPresenting) {
+      const eyeParamsL = this.vrHMD.getEyeParameters( 'left' )
 
-  this.scale = 1;
-
-  var isPresenting = false;
-
-  var rendererSize = renderer.getSize();
-  var rendererPixelRatio = renderer.getPixelRatio();
-
-  this.setSize = function ( width, height ) {
-
-    rendererSize = { width: width, height: height };
-
-    if ( isPresenting ) {
-
-      var eyeParamsL = vrHMD.getEyeParameters( 'left' );
-      renderer.setPixelRatio( 1 );
-
-      if ( isDeprecatedAPI ) {
-
-        renderer.setSize( eyeParamsL.renderRect.width * 2, eyeParamsL.renderRect.height, false );
-
-      } else {
-
-        renderer.setSize( eyeParamsL.renderWidth * 2, eyeParamsL.renderHeight, false );
-
+      if(this.isDeprecatedAPI) {
+        this.renderer.setSize( eyeParamsL.renderRect.width * 2, eyeParamsL.renderRect.height)
       }
-
-
-    } else {
-
-      renderer.setPixelRatio( rendererPixelRatio );
-      renderer.setSize( width, height );
-
+      else {
+        this.renderer.setSize(eyeParamsL.renderWidth * 2, eyeParamsL.renderHeight)
+      }
+    }
+    else {
+      this.renderer.setSize(width, height)
     }
 
   };
-
+  /*
   // fullscreen
 
   var canvas = renderer.domElement;
@@ -402,5 +385,5 @@ export class VREffect {
     return fovPortToProjection( fovPort, rightHanded, zNear, zFar );
 
   }
-
-};
+  */
+}

@@ -1,5 +1,9 @@
 import * as WebVR from './WebVR'
 import * as THREE from 'three'
+import { CSS3DRenderer, CSSObject3D } from './CSS3DRenderer'
+import { CSS3DVREffect } from './CSS3DVREffect'
+
+require('three/examples/js/controls/VRControls.js')
 
 if(!WebVR.isLatestAvailable()) {
   document.body.appendChild(WebVR.getMessage())
@@ -7,18 +11,18 @@ if(!WebVR.isLatestAvailable()) {
 
 let camera : THREE.PerspectiveCamera
 let raycaster : THREE.Raycaster
-let effect : THREE.VREffect
+let effect : CSS3DVREffect
 let controls : THREE.VRControls
 let room : THREE.Mesh
 
 let isMouseDown = false
 
-let INTERSECTED : THREE.Object3D & { material?: any; currentHex?: number }
+let INTERSECTED : THREE.Object3D & { material? : any; currentHex? : number }
 
 let renderer : THREE.WebGLRenderer
 let scene : THREE.Scene
 
-let renderer2 : THREE.CSS3DRenderer
+let renderer2 : CSS3DRenderer
 let scene2 : THREE.Scene
 
 init()
@@ -67,7 +71,7 @@ function init() {
   }
   raycaster = new THREE.Raycaster()
   renderer = new THREE.WebGLRenderer( { antialias: true } )
-  renderer2 = new THREE.CSS3DRenderer()
+  renderer2 = new CSS3DRenderer()
   renderer.setClearColor( 0x101010 )
   renderer.setPixelRatio( window.devicePixelRatio )
   renderer.setSize( window.innerWidth, window.innerHeight )
@@ -77,18 +81,18 @@ function init() {
   container.appendChild( renderer.domElement )
   controls = new THREE.VRControls( camera )
   // effect = new THREE.VREffect( renderer )
-  effect = new THREE.VREffect( renderer2 )
+  effect = new CSS3DVREffect(renderer2, (err : string) => console.error('CSS3DVREffect: ' + err))
 
-  //CSS3D Scene
+  // CSS3D Scene
   scene2 = new THREE.Scene()
 
-  //HTML
+  // HTML
   const element = document.createElement('div')
   element.innerHTML = 'Plain text inside a div.'
   element.className = 'three-div'
 
-  //CSS Object
-  const div = new THREE.CSS3DObject(element)
+  // CSS Object
+  const div = new CSSObject3D(element)
   div.position.x = 0
   div.position.y = 0
   div.position.z = -185
@@ -96,11 +100,11 @@ function init() {
   // div.rotation.y = Math.PI
   scene2.add(div)
 
-  //CSS3D Renderer
-  renderer2.setSize(window.innerWidth, window.innerHeight)
-  renderer2.domElement.style.position = 'absolute'
-  renderer2.domElement.style.top = '0'
-  document.body.appendChild(renderer2.domElement)
+  // CSS3D Renderer
+  // renderer2.setSize(window.innerWidth, window.innerHeight)
+  // renderer2.domElement.style.position = 'absolute'
+  // renderer2.domElement.style.top = '0'
+  // document.body.appendChild(renderer2.domElement)
 
 
 
@@ -179,7 +183,7 @@ function render() {
     cube.rotation.z += cube.userData.velocity.z * 2
   }
   controls.update()
-  effect.render( scene2, camera )
+  // effect.render( scene2, camera )
   // effect.render( scene, camera )
   // renderer2.render(scene2, camera);
   // renderer.render(scene, camera);

@@ -1,5 +1,5 @@
-// declare class VRDisplay {}
-// declare class HMDVRDevice {}
+declare class VRDisplay {}
+declare class HMDVRDevice {}
 
 interface Navigator {
   getVRDisplays() : PromiseLike<VRDisplay[] | HMDVRDevice[]>
@@ -7,5 +7,5 @@ interface Navigator {
 }
 
 interface NumberConstructor {
-  EPSILON : number
+  // EPSILON : number
 }

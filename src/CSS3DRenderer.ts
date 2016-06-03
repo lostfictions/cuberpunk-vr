@@ -45,8 +45,6 @@ export class CSSSprite3D extends CSSObject3D {
   }
 }
 
-
-
 export class CSS3DRenderer {
   private matrix : THREE.Matrix4
   private cache : any
@@ -87,7 +85,6 @@ export class CSS3DRenderer {
   })
 
   setSize(width : number, height : number) : void {
-
     this.width = width
     this.height = height
 
@@ -148,8 +145,10 @@ export class CSS3DRenderer {
 
   renderObject(object : THREE.Object3D, camera : THREE.Camera) : void {
     if(object instanceof CSSObject3D) {
+
       let style : string
-      if (object instanceof CSSSprite3D ) {
+
+      if(object instanceof CSSSprite3D ) {
         // http://swiftcoder.wordpress.com/2008/11/25/constructing-a-billboard-matrix/
 
         const matrix = this.matrix
@@ -229,12 +228,4 @@ export class CSS3DRenderer {
 
     this.renderObject(scene, camera)
   }
-
-  setClearColor() : void {}
-  setPixelRatio(ratio : number) : void {}
-  getPixelRatio() : number { return 1 }
-  setScissorTest(enabled : boolean) : void {}
-  setViewport(x : number, y : number, width : number, height : number) : void {}
-  setScissor(x : number, y : number, width : number, height : number) : void {}
-  clear() : void {}
 }

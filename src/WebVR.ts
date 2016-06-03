@@ -1,5 +1,7 @@
 export const isLatestAvailable = () : boolean => navigator.getVRDisplays !== undefined
+
 export const isAvailable = () : boolean => navigator.getVRDisplays !== undefined || navigator.getVRDevices !== undefined
+
 export const getMessage = () : HTMLDivElement => {
   let message : string
 
