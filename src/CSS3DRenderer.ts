@@ -47,7 +47,7 @@ export class CSSSprite3D extends CSSObject3D {
 
 export class CSS3DRenderer {
   domElement : HTMLDivElement
-  
+
   private matrix : THREE.Matrix4
   private cache : any
   private cameraElement : HTMLDivElement
@@ -151,7 +151,6 @@ export class CSS3DRenderer {
 
       if(object instanceof CSSSprite3D ) {
         // http://swiftcoder.wordpress.com/2008/11/25/constructing-a-billboard-matrix/
-
         const matrix = this.matrix
 
         matrix.copy(camera.matrixWorldInverse)

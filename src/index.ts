@@ -2,8 +2,7 @@ import * as WebVR from './WebVR'
 import * as THREE from 'three'
 import { CSS3DRenderer, CSSObject3D } from './CSS3DRenderer'
 import { CSS3DVREffect } from './CSS3DVREffect'
-
-require('three/examples/js/controls/VRControls.js')
+import { VRControls } from './VRControls'
 
 if(!WebVR.isLatestAvailable()) {
   document.body.appendChild(WebVR.getMessage())
@@ -11,9 +10,10 @@ if(!WebVR.isLatestAvailable()) {
 
 let camera : THREE.PerspectiveCamera
 let raycaster : THREE.Raycaster
-let effect : CSS3DVREffect
-let controls : THREE.VRControls
 let room : THREE.Mesh
+
+let effect : CSS3DVREffect
+let controls : VRControls
 
 let isMouseDown = false
 
@@ -48,11 +48,11 @@ function init() : void {
   )
   scene.add( room )
   scene.add( new THREE.HemisphereLight( 0x404020, 0x202040, 0.5 ) )
-  var light = new THREE.DirectionalLight( 0xffffff )
+  const light = new THREE.DirectionalLight( 0xffffff )
   light.position.set( 1, 1, 1 ).normalize()
   scene.add( light )
-  var geometry = new THREE.BoxGeometry( 0.15, 0.15, 0.15 )
-  for ( var i = 0; i < 200; i ++ ) {
+  const geometry = new THREE.BoxGeometry( 0.15, 0.15, 0.15 )
+  for(let i = 0; i < 200; i++) {
     const object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) )
     object.position.x = Math.random() * 4 - 2
     object.position.y = Math.random() * 4 - 2
@@ -79,7 +79,7 @@ function init() : void {
   const container = document.createElement('div')
   document.body.appendChild(container)
   container.appendChild( renderer.domElement )
-  controls = new THREE.VRControls( camera )
+  controls = new VRControls(camera, e => console.error(e))
   // effect = new THREE.VREffect( renderer )
   effect = new CSS3DVREffect(renderer2, (err : string) => console.error('CSS3DVREffect: ' + err))
 
@@ -149,21 +149,26 @@ function render() : void {
   }
   // find intersections
   raycaster.setFromCamera( { x: 0, y: 0 }, camera )
-  var intersects = raycaster.intersectObjects( room.children )
-  if ( intersects.length > 0 ) {
-    if ( INTERSECTED != intersects[ 0 ].object ) {
-      if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex )
-      INTERSECTED = intersects[ 0 ].object
+  const intersects = raycaster.intersectObjects( room.children )
+  if(intersects.length > 0) {
+    if(INTERSECTED !== intersects[0].object) {
+      if(INTERSECTED) {
+        INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex)
+      }
+      INTERSECTED = intersects[0].object
       INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex()
-      INTERSECTED.material.emissive.setHex( 0xff0000 )
+      INTERSECTED.material.emissive.setHex(0xff0000)
     }
-  } else {
-    if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex )
+  }
+  else {
+    if(INTERSECTED) {
+      INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex)
+    }
     INTERSECTED = undefined
   }
   // Keep cubes inside room
-  for ( var i = 0; i < room.children.length; i ++ ) {
-    var cube = room.children[ i ]
+  for (let i = 0; i < room.children.length; i++) {
+    const cube = room.children[ i ]
     cube.userData.velocity.multiplyScalar( 0.999 )
     cube.position.add( cube.userData.velocity )
     if ( cube.position.x < - 3 || cube.position.x > 3 ) {

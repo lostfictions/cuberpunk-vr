@@ -6,20 +6,15 @@ export class CSS3DVREffect {
 
   private vrDisplay : VRDisplay
   private renderer : CSS3DRenderer
-  private onError : ErrorEventHandler
   private isPresenting = false
 
   private eyeTranslationL : THREE.Vector3
   private eyeTranslationR : THREE.Vector3
 
   private domElement : HTMLDivElement
-  private requestFullscreen : string
-  private exitFullscreen : string
-  private fullscreenElement : string
 
   constructor(renderer : CSS3DRenderer, onError : ErrorEventHandler) {
     this.renderer = renderer
-    this.onError = onError
 
     this.eyeTranslationL = new THREE.Vector3()
     this.eyeTranslationR = new THREE.Vector3()
@@ -27,20 +22,27 @@ export class CSS3DVREffect {
     this.domElement = renderer.domElement
 
     if(navigator.getVRDisplays) {
-      navigator.getVRDisplays().then(this.gotVRDevices)
+      navigator.getVRDisplays().then(devices => {
+        for(const d of devices) {
+          if('VRDisplay' in window && d instanceof VRDisplay) {
+            this.vrDisplay = d
+            break
+          }
+        }
+
+        if(this.vrDisplay == undefined) {
+          if(onError) {
+            onError('HMD not available')
+          }
+        }
+      })
     }
 
     // Handle fullscreen
     if(this.domElement.requestFullscreen) {
-      this.requestFullscreen = 'requestFullscreen'
-      this.fullscreenElement = 'fullscreenElement'
-      this.exitFullscreen = 'exitFullscreen'
       document.addEventListener('fullscreenchange', this.onFullscreenChange, false)
     }
     else if(this.domElement.webkitRequestFullscreen) {
-      this.requestFullscreen = 'webkitRequestFullscreen'
-      this.fullscreenElement = 'webkitFullscreenElement'
-      this.exitFullscreen = 'webkitExitFullscreen'
       document.addEventListener('webkitfullscreenchange', this.onFullscreenChange, false)
     }
     else {
@@ -65,23 +67,6 @@ export class CSS3DVREffect {
     }
 
   };
-
-  private gotVRDevices(devices : VRDisplay[]) : void {
-    for(const d of devices) {
-      if('VRDisplay' in window && d instanceof VRDisplay) {
-        this.vrDisplay = d
-        break
-      }
-    }
-
-    if(this.vrDisplay == undefined) {
-      if(this.onError) {
-        this.onError('HMD not available')
-      }
-    }
-  }
-
-
 
   private onFullscreenChange() : void {
 
