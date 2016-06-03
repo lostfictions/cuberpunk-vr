@@ -8,8 +8,6 @@ const config = require('./webpack.config.development')
 const app = express()
 const compiler = webpack(config)
 
-const PORT = 3000
-
 app.use(require('webpack-dev-middleware')(compiler, {
   publicPath: config.output.publicPath,
   stats: {
@@ -19,11 +17,11 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler))
 
-app.listen(PORT, 'localhost', err => {
-  if (err) {
+app.listen(config.serverPort, 'localhost', err => {
+  if(err) {
     console.log(err)
     return
   }
 
-  console.log(`Listening at http://localhost:${PORT}`)
+  console.log(`Listening at http://localhost:${config.serverPort}`)
 })

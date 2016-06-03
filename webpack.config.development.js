@@ -2,20 +2,19 @@
 'use strict'
 
 const webpack = require('webpack')
-const baseConfig = require('./webpack.config.base')
-
-const config = Object.create(baseConfig)
+const config = require('./webpack.config.base')
+const basePath = `http://localhost:${config.serverPort}`
 
 config.debug = true
 
 config.devtool = 'cheap-module-eval-source-map'
 
 config.entry = [
-  'webpack-hot-middleware/client?reload=true&path=http://localhost:3000/__webpack_hmr',
+  `webpack-hot-middleware/client?reload=true&path=${basePath}/__webpack_hmr`,
   './src/index'
 ]
 
-config.output.publicPath = 'http://localhost:3000/dist/'
+config.output.publicPath = `${basePath}/dist/`
 
 config.module.loaders.push({
   test: /^((?!\.module).)*\.css$/,
@@ -30,7 +29,6 @@ config.module.loaders.push({
     'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!'
   ]
 })
-
 
 config.plugins.push(
   new webpack.HotModuleReplacementPlugin(),

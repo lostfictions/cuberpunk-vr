@@ -3,16 +3,13 @@
 
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const baseConfig = require('./webpack.config.base')
-
-
-const config = Object.create(baseConfig)
+const config = require('./webpack.config.base')
 
 config.devtool = 'source-map'
 
 config.entry = './src/index'
 
-config.output.publicPath = '../dist/'
+config.output.publicPath = './dist/'
 
 config.module.loaders.push({
   test: /^((?!\.module).)*\.css$/,

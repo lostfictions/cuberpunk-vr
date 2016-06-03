@@ -28,8 +28,7 @@
     "class-name": true,
     "comment-format": [
       true,
-      "check-space",
-      "check-lowercase"
+      "check-space"
     ],
     "curly": true,
     "eofline": true,
@@ -40,7 +39,7 @@
     ],
     "interface-name": [
       true,
-      "always-prefix"
+      "never-prefix"
     ],
     "jsdoc-format": true,
     "label-position": true,
@@ -49,11 +48,11 @@
       true,
       140
     ],
-    "member-access": true,
+    "member-access": false,
     "member-ordering": [
-      true,
+      false,
       {
-        "order": "fields-first"
+        "order": "statics-first"
       }
     ],
     "new-parens": true,
@@ -74,7 +73,7 @@
     "no-construct": true,
     "no-constructor-vars": true,
     "no-debugger": true,
-    "no-default-export": true,
+    "no-default-export": false,
     "no-duplicate-key": true,
     "no-duplicate-variable": true,
     "no-empty": true,
@@ -103,7 +102,6 @@
       true,
       "check-open-brace",
       "check-whitespace",
-      "check-else",
       "check-finally",
       "check-whitespace"
     ],
@@ -138,8 +136,8 @@
       true,
       "call-signature",
       "parameter",
-      "property-declaration",
-      "member-variable-declaration"
+      "property-declaration"//,
+      // "member-variable-declaration"
     ],
     "typedef-whitespace": [
       true,
@@ -147,7 +145,7 @@
         "call-signature": "onespace",
         "index-signature": "onespace",
         "parameter": "onespace",
-        "property-declaration": "nospace",
+        "property-declaration": "onespace",
         "variable-declaration": "onespace"
       },
       {
@@ -173,7 +171,6 @@
       "check-decl",
       "check-operator",
       "check-separator",
-      "check-type",
       "check-type"
     ]
   }

@@ -1,14 +1,14 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
-    "outDir": "./dist/",
-    "sourceMap": true,
-    "noImplicitAny": true,
+    "target": "es5",
     "module": "commonjs",
-    "target": "es6",
-    "allowJs": false
+    "sourceMap": true,
+    "noImplicitAny": true
   },
-  "exclude": [
-    "node_modules",
-    "dist"
+  "files": [
+    "typings/index.d.ts",
+    "src/extratypings.d.ts",
+    "src/index.ts"
   ]
 }
