@@ -4,6 +4,8 @@ import { CSS3DRenderer, CSSObject3D } from './CSS3DRenderer'
 import { CSS3DVREffect } from './CSS3DVREffect'
 import { VRControls } from './VRControls'
 
+require('webvr-polyfill')
+
 if(!WebVR.isLatestAvailable()) {
   document.body.appendChild(WebVR.getMessage())
 }

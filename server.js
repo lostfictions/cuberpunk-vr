@@ -2,11 +2,13 @@
 'use strict'
 
 const express = require('express')
+const app = express()
+
 const webpack = require('webpack')
 const config = require('./webpack.config.development')
-
-const app = express()
 const compiler = webpack(config)
+
+app.use(express.static('public'))
 
 app.use(require('webpack-dev-middleware')(compiler, {
   publicPath: config.output.publicPath,
