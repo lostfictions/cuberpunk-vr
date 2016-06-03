@@ -1,6 +1,6 @@
 export const isLatestAvailable = () : boolean => navigator.getVRDisplays !== undefined
 
-export const isAvailable = () : boolean => navigator.getVRDisplays !== undefined || navigator.getVRDevices !== undefined
+export const isAvailable = isLatestAvailable // HACK
 
 export const getMessage = () : HTMLDivElement => {
   let message : string
@@ -12,15 +12,12 @@ export const getMessage = () : HTMLDivElement => {
       }
     })
   }
-  else if(navigator.getVRDevices) {
-    message = 'Your browser supports WebVR but not the latest version. See <a href="http://webvr.info">webvr.info</a> for more info.'
-  }
   else {
     message = 'Your browser does not support WebVR. See <a href="http://webvr.info">webvr.info</a> for assistance.'
   }
 
   if(message !== undefined) {
-    const container = document.createElement( 'div' )
+    const container = document.createElement('div')
     container.style.position = 'absolute'
     container.style.left = '0'
     container.style.top = '0'
@@ -28,7 +25,7 @@ export const getMessage = () : HTMLDivElement => {
     container.style.zIndex = '999'
     container.align = 'center'
 
-    const error = document.createElement( 'div' )
+    const error = document.createElement('div')
     error.style.fontFamily = 'sans-serif'
     error.style.fontSize = '16px'
     error.style.fontStyle = 'normal'

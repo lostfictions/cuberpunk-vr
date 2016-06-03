@@ -46,9 +46,10 @@ export class CSSSprite3D extends CSSObject3D {
 }
 
 export class CSS3DRenderer {
+  domElement : HTMLDivElement
+  
   private matrix : THREE.Matrix4
   private cache : any
-  private domElement : HTMLDivElement
   private cameraElement : HTMLDivElement
 
   private width : number

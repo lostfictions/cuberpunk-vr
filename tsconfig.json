@@ -8,7 +8,7 @@
   },
   "files": [
     "typings/index.d.ts",
-    "src/extratypings.d.ts",
+    "src/webvr-api.d.ts",
     "src/index.ts"
   ]
 }

@@ -28,7 +28,7 @@ let scene2 : THREE.Scene
 init()
 animate()
 
-function init() {
+function init() : void {
   scene = new THREE.Scene()
   camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 )
   scene.add( camera )
@@ -118,34 +118,34 @@ function init() {
 
   window.addEventListener( 'resize', onWindowResize, false )
 }
-function onMouseDown() {
+function onMouseDown() : void {
   isMouseDown = true
 }
-function onMouseUp() {
+function onMouseUp() : void {
   isMouseDown = false
 }
-function onWindowResize() {
+function onWindowResize() : void {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
   effect.setSize( window.innerWidth, window.innerHeight )
 }
 
-function animate() {
+function animate() : void {
   requestAnimationFrame( animate )
   render()
 }
 
-function render() {
+function render() : void {
   if ( isMouseDown === true ) {
-    var cube = room.children[ 0 ]
-    room.remove( cube )
+    const cube = room.children[ 0 ]
+    room.remove(cube)
     cube.position.set( 0, 0, - 0.75 )
     cube.position.applyQuaternion( camera.quaternion )
     cube.userData.velocity.x = ( Math.random() - 0.5 ) * 0.02
     cube.userData.velocity.y = ( Math.random() - 0.5 ) * 0.02
     cube.userData.velocity.z = ( Math.random() * 0.01 - 0.05 )
     cube.userData.velocity.applyQuaternion( camera.quaternion )
-    room.add( cube )
+    room.add(cube)
   }
   // find intersections
   raycaster.setFromCamera( { x: 0, y: 0 }, camera )
